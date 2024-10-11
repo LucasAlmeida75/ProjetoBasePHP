@@ -1,0 +1,22 @@
+.sidebar {
+    height: 100vh;
+    background-color: #f8f9fa;
+    transition: transform 0.3s ease;
+    width: 250px; /* Defina a largura da sidebar conforme necessário */
+}
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+.toggle-btn {
+    position: fixed; /* Manter o botão fixo na tela */
+    top: 20px; /* Posição do botão verticalmente */
+    left: 0; /* Botão no lado esquerdo da tela */
+    z-index: 1000; /* Estar acima de outros elementos */
+}
+body.dark-mode {
+    background-color: #343a40;
+    color: white;
+}
+body.dark-mode .sidebar {
+    background-color: #495057;
+}

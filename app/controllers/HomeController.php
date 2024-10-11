@@ -25,6 +25,7 @@
 
         public function home() {
             $this->view("structure/header");
+            $this->view("structure/sidebar");
             $this->view("home/home");
             $this->view("structure/footer");
         }

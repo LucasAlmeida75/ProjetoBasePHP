@@ -1,6 +1,6 @@
-</div>
+
 <script src="<?php echo $this->siteUrl("js/bootstrap.js"); ?>"></script>
-<script src="<?php echo $this->siteUrl("js/sidebar.js"); ?>"></script>
+<script src="<?php echo $this->siteUrl("js/functions.js"); ?>"></script>
 <?php
     $app = new App();
     $controllerName = $app->getCurrentController();
