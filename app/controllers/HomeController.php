@@ -1,7 +1,7 @@
 <?php
     class HomeController extends Controller {
         public function index() {
-            $this->redirect($this->siteUrl("home/registrar"));
+            $this->redirect($this->siteUrl("home/signin"));
         }
         /* public function index($nome = "") {
             $cliente = $this->model('Cliente');
@@ -11,35 +11,22 @@
             $this->view("home/index", $data);
         } */
 
-        public function registrar() {
+        public function signin() {
             $this->view("structure/header");
-            $this->view("home/registrar");
+            $this->view("home/signin");
             $this->view("structure/footer");
         }
 
-        public function salvar() {
-            if ($_POST) {
-                $username = $this->cleanString($_POST['username']);
-                $password = $this->cleanString($_POST['password']);
-
-                if ($this->validateRegister()) {
-                    
-                }
-            }
-
+        public function signup() {
+            $this->view("structure/header");
+            $this->view("home/signup");
+            $this->view("structure/footer");
         }
 
-        protected function validateRegister() {
-            $username = $this->cleanString($_POST['username']);
-            $password = $this->cleanString($_POST['password']);
-
-            if (strlen($username) < 4)
-                return false;
-
-            if (strlen($password) < 6)
-                return false;
-
-            return true;
+        public function home() {
+            $this->view("structure/header");
+            $this->view("home/home");
+            $this->view("structure/footer");
         }
     }
 ?>

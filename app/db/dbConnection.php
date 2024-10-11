@@ -1,7 +1,7 @@
 <?php
-$dsn        = "mysql:host=mysql;dbname=myfirstdatabase";
-$dbUsername = "mysql";
-$dbPassword = "mysql";
+$dsn        = "mysql:host=localhost;dbname=ProjetoBasePHP";
+$dbUsername = "root";
+$dbPassword = "";
 
 try {
     $pdo = new PDO($dsn, $dbUsername, $dbPassword);
