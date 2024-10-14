@@ -9,3 +9,6 @@
     <link href="<?php echo $this->siteUrl("css/styles.css"); ?>" rel="stylesheet">
 </head>
 <body>
+<?php if (!isset($data['sidebarOff'])) {
+    $this->view("structure/sidebar");
+} ?>

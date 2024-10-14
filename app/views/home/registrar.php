@@ -1,5 +1,5 @@
 <h2 class="text-center">Registro</h2>
-<form id="registerForm" method="post" action="<?php echo $this->siteUrl("user/signup"); ?>">
+<form id="registerForm" method="post" action="<?php echo $this->siteUrl("usuario/registrar"); ?>">
     <div class="mb-3">
         <label for="username" class="form-label">Nome de Usuário</label>
         <input type="text" class="form-control" name="username" id="username" required>
@@ -18,4 +18,4 @@
     </div>
     <button type="submit" class="btn btn-primary">Registrar</button>
 </form>
-<p class="mt-3 text-center">Já tem uma conta? <a href="<?php echo $this->siteUrl("home/signin"); ?>">Faça login</a></p>
+<p class="mt-3 text-center">Já tem uma conta? <a href="<?php echo $this->siteUrl("home/entrar"); ?>">Faça login</a></p>

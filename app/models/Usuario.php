@@ -1,11 +1,11 @@
 <?php
 
-class User {
+class Usuario {
 
     function insert($username, $email, $password) {
         require_once "../app/db/dbConnection.php";
 
-        $query = "INSERT INTO tUsers (username, email, password) VALUES (:username, :email, :password)";
+        $query = "INSERT INTO tUsuarios (username, email, password) VALUES (:username, :email, :password)";
 
         $stmt = $pdo->prepare($query);
 
@@ -20,7 +20,7 @@ class User {
     function searchByUsername($username) {
         require_once "../app/db/dbConnection.php";
 
-        $query = "SELECT * FROM tUsers WHERE username = :username";
+        $query = "SELECT * FROM tUsuarios WHERE username = :username";
 
         $stmt = $pdo->prepare($query);
 

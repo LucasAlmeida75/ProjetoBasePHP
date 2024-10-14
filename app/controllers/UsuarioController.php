@@ -1,7 +1,7 @@
 <?php
-    class UserController extends Controller {
+    class UsuarioController extends Controller {
         public function index() {
-            $this->redirect($this->siteUrl("home/signup"));
+            $this->redirect($this->siteUrl("home/entrar"));
         }
 
         public function cadastro($nome = "", $sobrenome = "") {
@@ -10,17 +10,17 @@
             "sobrenome: " . $sobrenome . "<br><br>" ;exit;
         }
 
-        public function signup() {
+        public function registrar() {
             if ($this->postRequest()) {
-                $this->validateSignup($username, $email, $password, $errors);
+                $this->validateRegistrar($username, $email, $password, $errors);
 
                 if (empty($errors)) {
 
                     try {
-                        $obj = $this->model('User');
+                        $obj = $this->model('Usuario');
                         $obj->insert($username, $email, $password);
 
-                        $this->redirect($this->siteUrl("home/signup"));
+                        $this->redirect($this->siteUrl("home/registrar"));
                     } catch (PDOException $e) {
                         die("Erro ao registrar usuário: " . $e->getMessage());
                     }
@@ -35,17 +35,17 @@
                 return;
             }
 
-            $this->redirect($this->siteUrl("home/signup"));
+            $this->redirect($this->siteUrl("home/registrar"));
         }
 
-        public function signin() {
+        public function entrar() {
             if ($this->postRequest()) {
-                $this->validateSignin($username, $password, $errors);
+                $this->validateEntrar($username, $password, $errors);
 
                 if (empty($errors)) {
 
                     try {
-                        $obj = $this->model('User');
+                        $obj = $this->model('Usuario');
                         $obj->insert($username, $password);
 
                         $this->redirect($this->siteUrl("home/home"));
@@ -61,13 +61,13 @@
                 }
             }
 
-            $this->redirect($this->siteUrl("home/signin"));
+            $this->redirect($this->siteUrl("home/entrar"));
         }
 
-        protected function validateSignin(&$username, &$password, &$errors) {
+        protected function validateEntrar(&$username, &$password, &$errors) {
             $fieldsToValidate = [
                 'username' => [
-                    "string"       => true,
+                    "required"     => true,
                     "cleanHtml"    => true,
                     "cleanSpecial" => true,
                     "toUpper"      => true,
@@ -75,7 +75,7 @@
                     "maxLength"    => 50
                 ],
                 'password' => [
-                    "string"    => true,
+                    "required"  => true,
                     "cleanHtml" => true,
                     "minLength" => 6,
                     "maxLength" => 250
@@ -88,7 +88,7 @@
                 $username = $validationResults['data']['username'];
                 $password = $validationResults['data']['password'];
 
-                $obj = $this->model('User');
+                $obj = $this->model('Usuario');
                 $user = $obj->searchByUsername($username);
                 if (count($user) == 0)
                     $errors["username"][] = "usuário ou senha incorretos!";
@@ -102,10 +102,10 @@
             }
         }
 
-        protected function validateSignup(&$username, &$email, &$password, &$errors) {
+        protected function validateRegistrar(&$username, &$email, &$password, &$errors) {
             $fieldsToValidate = [
                 'username' => [
-                    "string"       => true,
+                    "required"     => true,
                     "cleanHtml"    => true,
                     "cleanSpecial" => true,
                     "toUpper"      => true,
@@ -113,13 +113,13 @@
                     "maxLength"    => 50
                 ],
                 'password' => [
-                    "string"    => true,
+                    "required"  => true,
                     "cleanHtml" => true,
                     "minLength" => 6,
                     "maxLength" => 250
                 ],
                 'email' => [
-                    "string"    => true,
+                    "required"  => true,
                     "cleanHtml" => true,
                     "email"     => true,
                     "minLength" => 6,
@@ -134,7 +134,7 @@
                 $email    = $validationResults['data']['email'];
                 $password = password_hash($validationResults['data']['password'], PASSWORD_DEFAULT);
 
-                $obj = $this->model('User');
+                $obj = $this->model('Usuario');
                 $user = $obj->searchByUsername($username);
                 if (count($user) > 0)
                     $errors["username"][] = "usuário já cadastrado!";

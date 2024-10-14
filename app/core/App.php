@@ -30,6 +30,9 @@ class App {
 
         $this->params = $url ? array_values($url) : [];
 
+        session_start();
+        $_SESSION["currentController"] = $this->currentController;
+
         call_user_func_array([$this->controller, $this->method], $this->params);
     }
 
@@ -37,10 +40,6 @@ class App {
         if (isset($_GET['url'])) {
             return explode("/", filter_var(rtrim($_GET['url'], "/"), FILTER_SANITIZE_URL));
         }
-    }
-
-    public function getCurrentController() {
-        return $this->currentController;
     }
 }
 ?>

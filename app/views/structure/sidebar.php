@@ -3,7 +3,7 @@
 		<h4 class="mt-2">Menu</h4>
 		<ul class="nav flex-column">
 			<li class="nav-item">
-				<a class="nav-link active" href="#">
+				<a class="nav-link active" href="<?php echo $this->siteUrl("cliente/listar"); ?>">
 					<i class="bi bi-people-fill"></i> Clientes
 				</a>
 			</li>
@@ -46,7 +46,3 @@
 	</button>
 
 	<main class="flex-grow-1 p-4">
-		<h2>Página Principal</h2>
-		<p>Conteúdo principal aqui...</p>
-	</main>
-</div>

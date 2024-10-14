@@ -27,26 +27,53 @@ class Controller {
         return $url . $location;
     }
 
-    protected function validateFields($fields, $method = "POST") {
+    protected function processData() {
+
+        $method = $_SERVER['REQUEST_METHOD'];
+        $data = [];
+
+        if ($method === 'POST') {
+            $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+
+            if (strpos($contentType, 'application/json') === 0) {
+                // A requisição é em formato JSON
+                $json = file_get_contents('php://input');
+                $data = json_decode($json, true); // Decodifica JSON em array associativo
+            } else {
+                // A requisição é um formulário normal
+                $data = $_POST;
+            }
+        } elseif ($method === 'GET') {
+            $data = $_GET;
+        }
+
+        return $data;
+
+    }
+
+    protected function validateFields($fields) {
+        $data          = $this->processData();
         $validatedData = [];
-        $errors = [];
+        $errors        = [];
 
         foreach ($fields as $fieldName => $options) {
-            if ($method == "POST")
-                $value = $_POST[$fieldName] ?? null;
-            else
-                $value = $_GET[$fieldName] ?? null;
+
+            $value = $data[$fieldName] ?? null;
 
             if (isset($options['cleanHtml']) && $options['cleanHtml'] === true) {
                 $value = strip_tags($value);
             }
 
             if (isset($options['cleanSpecial']) && $options['cleanSpecial'] === true) {
-                $value = preg_replace('/[^a-zA-Z0-9]/', '', $value);
+                $value = preg_replace('/[^a-zA-Z0-9\s]/', '', $value);
             }
 
             if (isset($options['toUpper']) && $options['toUpper'] === true) {
                 $value = mb_strtoupper($value);
+            }
+
+            if (isset($options['onlyNumbers']) && $options['onlyNumbers'] === true) {
+                $value = preg_replace('/\D/', '', $value);
             }
 
             $validationResult = $this->applyValidation($value, $options);
@@ -70,12 +97,11 @@ class Controller {
 
         foreach ($options as $option => $rule) {
             switch ($option) {
-                case 'string':
-                    if (!is_string($value)) {
-                        $errors[] = ' deve ser uma string.';
+                case 'required':
+                    if ($value == null) {
+                        $errors[] = ' é obrigatório.';
                     }
                     break;
-
                 case 'int':
                     if (!is_int($value) && !ctype_digit($value)) {
                         $errors[] = ' deve ser um número inteiro.';
@@ -89,7 +115,7 @@ class Controller {
                     break;
 
                 case 'email':
-                    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    if ($value != "" && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
                         $errors[] = ' não é um endereço de email válido.';
                     }
                     break;
@@ -107,7 +133,7 @@ class Controller {
                     break;
 
                 case 'minLength':
-                    if (is_string($value) && strlen($value) < $rule) {
+                    if (is_string($value) && $value != "" && strlen($value) < $rule) {
                         $errors[] = ' deve ter pelo menos ' . $rule . ' caracteres.';
                     }
                     break;
@@ -121,6 +147,7 @@ class Controller {
                 case 'cleanHtml':
                 case 'cleanSpecial':
                 case 'toUpper':
+                case 'onlyNumbers':
                     break;
 
                 default:
@@ -133,6 +160,13 @@ class Controller {
 
     protected function postRequest() {
         if ($_SERVER["REQUEST_METHOD"] == "POST")
+            return true;
+
+        return false;
+    }
+
+    protected function getRequest() {
+        if ($_SERVER["REQUEST_METHOD"] == "GET")
             return true;
 
         return false;
