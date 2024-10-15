@@ -37,24 +37,41 @@
             $data["urlForm"] = $this->siteUrl("cliente/salvar");
             if ($id != "") {
                 $data["urlForm"] = $this->siteUrl("cliente/salvar/$id");
+
+                try {
+                    $obj = $this->model('Cliente');
+                    $data['cliente'] = $obj->searchById($id);
+
+                    if (!is_array($data["cliente"]))
+                        $this->redirect($this->siteUrl("cliente/listar"));
+
+                } catch (PDOException $e) {
+                    die("Erro ao buscar clientes: " . $e->getMessage());
+                }
             }
             $this->view("structure/header");
             $this->view("cliente/detalhes", $data);
             $this->view("structure/footer");
         }
 
-        public function salvar() {
+        public function salvar($id = null) {
             if ($this->postRequest()) {
                 $this->validateCliente($cpf_cnpj, $name, $email, $cellphone, $errors);
 
                 if (empty($errors)) {
                     try {
                         $obj = $this->model('Cliente');
-                        $obj->insert($cpf_cnpj, $name, $email, $cellphone);
+                        if ($id == null) {
+                            $obj->insert($cpf_cnpj, $name, $email, $cellphone);
+                        } else {
+                            $cliente = $obj->searchById($id);
+                            if (is_array($cliente))
+                                $obj->updateById($id, $cpf_cnpj, $name, $email, $cellphone);
+                        }
 
                         $this->redirect($this->siteUrl("cliente/listar"));
                     } catch (PDOException $e) {
-                        die("Erro ao registrar cliente: " . $e->getMessage());
+                        die("Erro ao atualizar cliente: " . $e->getMessage());
                     }
                 } else {
                     foreach ($errors as $field => $errs) {
@@ -66,7 +83,7 @@
                 }
             }
 
-            $this->redirect($this->siteUrl("home/registrar"));
+            $this->redirect($this->siteUrl("home/entrar"));
         }
 
         public function validateCliente(&$cpf_cnpj = null, &$name = null, &$email = null, &$cellphone = null, &$errors = []) {
@@ -81,6 +98,7 @@
                     "required"     => true,
                     "cleanHtml"    => true,
                     "cleanSpecial" => true,
+                    "toUpper"      => true,
                     "minLength"    => 6,
                     "maxLength"    => 250
                 ],
@@ -115,6 +133,7 @@
                 "search" => [
                     "cleanHtml"    => true,
                     "cleanSpecial" => true,
+                    "toUpper"      => true,
                     "minLength"    => 1,
                     "maxLength"    => 255
                 ]

@@ -30,7 +30,7 @@
 			</button>
 			<div class="dropdown mt-2">
 				<a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-					<img src="#" alt="User Image" class="rounded-circle me-2">
+					<img src="#" class="rounded-circle me-2">
 					<strong>Nome do Usuário</strong>
 				</a>
 				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

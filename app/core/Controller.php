@@ -65,7 +65,7 @@ class Controller {
             }
 
             if (isset($options['cleanSpecial']) && $options['cleanSpecial'] === true) {
-                $value = preg_replace('/[^a-zA-Z0-9\s]/', '', $value);
+                $value = preg_replace('/[^\p{L}\p{N}\s]/u', '', $value);
             }
 
             if (isset($options['toUpper']) && $options['toUpper'] === true) {
@@ -176,6 +176,41 @@ class Controller {
         echo "<pre>";
         print_r($array);
         echo "</pre>";
+    }
+
+    function mask($val, $mask){
+
+        $maskared   = '';
+        $k          = 0;
+        $t          = strlen($mask);
+
+        if ( strlen($val) == $t )
+            return $val;
+
+        for($i = 0; $i <= $t -1; $i++) {
+            if($mask[$i] == '#'){
+                if(isset($val[$k]))
+                    $maskared .= $val[$k++];
+            }
+            else {
+                if(isset($mask[$i]))
+                    $maskared .= $mask[$i];
+            }
+        }
+        return $maskared;
+    }
+
+    protected function maskCellphone($string) {
+        return $this->mask($string, "## (##) # ####-####");
+    }
+
+    protected function maskCpfCnpj($string) {
+        if (strlen($string) == 11) 
+            $string = $this->mask($string, "###.###.###-##");
+        else
+            $string = $this->mask($string, "##.###.###/####-##");
+
+        return $string;
     }
 }
 ?>

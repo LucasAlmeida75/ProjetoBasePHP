@@ -3,13 +3,6 @@
         public function index() {
             $this->redirect($this->siteUrl("home/entrar"));
         }
-        /* public function index($nome = "") {
-            $cliente = $this->model('Cliente');
-            $cliente->nome = $nome;
-
-            $data["nome"] = $cliente->nome;
-            $this->view("home/index", $data);
-        } */
 
         public function entrar() {
             $data['sidebarOff'] = true;

@@ -1,15 +1,19 @@
 <?php
+require_once "../app/db/dbConnection.php";
 
 class Cliente {
+    private $pdo;
+
+    function __construct() {
+        $this->pdo = Database::getInstance();
+    }
 
     function insert($cpf_cnpj, $name, $email, $cellphone) {
-        require_once "../app/db/dbConnection.php";
-
         $query = "INSERT INTO
                   tClientes (cpf_cnpj, name, email, cellphone)
                   VALUES (:cpf_cnpj, :name, :email, :cellphone)";
 
-        $stmt = $pdo->prepare($query);
+        $stmt = $this->pdo->prepare($query);
 
         $stmt->bindParam(":cpf_cnpj", $cpf_cnpj);
         $stmt->bindParam(":name", $name);
@@ -17,49 +21,59 @@ class Cliente {
         $stmt->bindParam(":cellphone", $cellphone);
 
         $stmt->execute();
-        $pdo = $stmt = null;
     }
 
     function searchById($id) {
-        require_once "../app/db/dbConnection.php";
-
         $query = "SELECT *
                   FROM tClientes
                   WHERE id = :id";
 
-        $stmt = $pdo->prepare($query);
+        $stmt = $this->pdo->prepare($query);
 
         $stmt->bindParam(":id", $id);
 
         $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $pdo = $stmt = null;
+        $results = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $results;
     }
 
     function removeById($id) {
-        require_once "../app/db/dbConnection.php";
+
 
         $query = "UPDATE tClientes
                   SET inactivated_at = CURRENT_TIMESTAMP
                   WHERE id = :id
                     AND inactivated_at IS NULL";
 
-        $stmt = $pdo->prepare($query);
+        $stmt = $this->pdo->prepare($query);
 
         $stmt->bindParam(":id", $id);
 
         $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $pdo = $stmt = null;
+    }
 
-        return $results;
+    function updateById($id, $cpf_cnpj, $name, $email, $cellphone) {
+        $query = "UPDATE tClientes
+                  SET cpf_cnpj  = :cpf_cnpj,
+                      name      = :name,
+                      email     = :email,
+                      cellphone = :cellphone
+                  WHERE id = :id
+                    AND inactivated_at IS NULL";
+
+        $stmt = $this->pdo->prepare($query);
+
+        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":cpf_cnpj", $cpf_cnpj);
+        $stmt->bindParam(":name", $name);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":cellphone", $cellphone);
+
+        $stmt->execute();
     }
 
     function list($name = null) {
-        require_once "../app/db/dbConnection.php";
-
         $query = "SELECT * FROM tClientes WHERE inactivated_at IS NULL";
 
         if ($name !== null) {
@@ -67,7 +81,7 @@ class Cliente {
             $query .= " AND name LIKE :name";
         }
 
-        $stmt = $pdo->prepare($query);
+        $stmt = $this->pdo->prepare($query);
 
         if ($name !== null) {
             $stmt->bindParam(":name", $search, PDO::PARAM_STR);

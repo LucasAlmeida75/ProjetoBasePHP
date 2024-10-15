@@ -20,7 +20,8 @@
                         $obj = $this->model('Usuario');
                         $obj->insert($username, $email, $password);
 
-                        $this->redirect($this->siteUrl("home/registrar"));
+                        $this->redirect($this->siteUrl("home/entrar"));
+                        exit;
                     } catch (PDOException $e) {
                         die("Erro ao registrar usuário: " . $e->getMessage());
                     }
@@ -32,26 +33,23 @@
                     }
                 }
 
-                return;
+                exit;
             }
 
             $this->redirect($this->siteUrl("home/registrar"));
         }
 
         public function entrar() {
+
             if ($this->postRequest()) {
+
                 $this->validateEntrar($username, $password, $errors);
 
                 if (empty($errors)) {
-
-                    try {
-                        $obj = $this->model('Usuario');
-                        $obj->insert($username, $password);
-
-                        $this->redirect($this->siteUrl("home/home"));
-                    } catch (PDOException $e) {
-                        die("Erro ao registrar usuário: " . $e->getMessage());
-                    }
+                    session_start();
+                    $_SESSION['loggedIn'] = true;
+                    $this->redirect($this->siteUrl("home/home"));
+                    exit;
                 } else {
                     foreach ($errors as $field => $errs) {
                         foreach ($errs as $error) {
@@ -90,7 +88,8 @@
 
                 $obj = $this->model('Usuario');
                 $user = $obj->searchByUsername($username);
-                if (count($user) == 0)
+
+                if (!is_array($user))
                     $errors["username"][] = "usuário ou senha incorretos!";
 
                 $passwordVerified = password_verify($password, $user['password']);
