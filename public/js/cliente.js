@@ -34,6 +34,7 @@ function validateFields() {
         return processResponse(response);
     })
     .then(data => {
+        console.log(data);
         if (data && Object.keys(data).length > 0) {
             showErrors(data);
         } else {

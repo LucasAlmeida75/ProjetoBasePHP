@@ -31,18 +31,17 @@
 			<div class="dropdown mt-2">
 				<a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 					<img src="#" class="rounded-circle me-2">
-					<strong>Nome do Usuário</strong>
+					<strong><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : "Usuário"; ?></strong>
 				</a>
 				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-					<li><a class="dropdown-item" href="#">Deslogar</a></li>
+					<li><a class="dropdown-item" href="<?php echo $this->siteUrl("auth/signout"); ?>">Deslogar</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 
-	<!-- Botão para ocultar/exibir a sidebar, agora do lado externo -->
-	<button class="btn btn-primary toggle-btn" id="toggleSidebar">
-		<i class="fas fa-bars"></i>
-	</button>
+	<button id="toggle-sidebar" class="btn btn-primary btn-sm">
+        <i class="bi bi-chevron-left"></i>
+    </button>
 
 	<main class="flex-grow-1 p-4">

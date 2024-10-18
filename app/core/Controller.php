@@ -79,7 +79,10 @@ class Controller {
             $validationResult = $this->applyValidation($value, $options);
 
             if ($validationResult !== true) {
-                $errors[$fieldName] = $validationResult;
+                if (isset($options["fieldLabel"]))
+                    $errors[$options["fieldLabel"]] = $validationResult;
+                else
+                    $errors[$fieldName] = $validationResult;
             } else {
                 $validatedData[$fieldName] = $value;
             }
@@ -144,6 +147,7 @@ class Controller {
                     }
                     break;
 
+                case 'fieldLabel':
                 case 'cleanHtml':
                 case 'cleanSpecial':
                 case 'toUpper':
@@ -156,6 +160,22 @@ class Controller {
         }
 
         return empty($errors) ? true : $errors;
+    }
+
+    protected function showErrors($errors) {
+        $alertMessage = "<strong>Erro!</strong>";
+        foreach ($errors as $field => $errs) {
+            foreach ($errs as $error) {
+                $alertMessage .= " '$field': $error";
+            }
+        }
+        $_SESSION["alertClass"]   = "danger";
+        $_SESSION["alertMessage"] = $alertMessage;
+    }
+
+    protected function alertSuccess() {
+        $_SESSION["alertClass"]   = "success";
+        $_SESSION["alertMessage"] = "Operação realizada com sucesso!";
     }
 
     protected function postRequest() {

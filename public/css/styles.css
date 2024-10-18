@@ -1,22 +1,63 @@
+:root {
+    --sidebar-bg-color: #f8f9fa; /* Cor de fundo da sidebar clara */
+    --link-color: #007bff; /* Cor padrão dos links */
+    --link-hover-color: #0056b3; /* Cor dos links ao passar o mouse */
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
 .sidebar {
     height: 100vh;
-    background-color: #f8f9fa;
+    background-color: var(--sidebar-bg-color);
+    transition: background-color 0.3s ease;
+    width: 250px;
+}
+
+.dark-theme {
+    --sidebar-bg-color: #495057; /* Cor de fundo da sidebar escura */
+    --link-color: #f8f9fa; /* Cor dos links no tema escuro */
+    --link-hover-color: #007bff; /* Muda a cor dos links ao passar o mouse */
+}
+
+#toggle-sidebar {
+    position: absolute;
+    left: 220px;
+    top: 20px;
+    transform: translateX(50%);
     transition: transform 0.3s ease;
-    width: 250px; /* Defina a largura da sidebar conforme necessário */
 }
-.sidebar.hidden {
-    transform: translateX(-100%);
+
+#toggle-sidebar.hiddenButton {
+    transform: translateX(-720%);
 }
-.toggle-btn {
-    position: fixed; /* Manter o botão fixo na tela */
-    top: 20px; /* Posição do botão verticalmente */
-    left: 0; /* Botão no lado esquerdo da tela */
-    z-index: 1000; /* Estar acima de outros elementos */
+
+.nav-link {
+    position: relative;
+    padding: 10px;
+    color: var(--link-color); /* Aplica a cor dos links */
+    transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Efeito suave ao passar o mouse */
 }
-body.dark-mode {
-    background-color: #343a40;
-    color: white;
+
+.nav-link:hover {
+    background-color: var(--link-hover-color); /* cor de fundo ao passar o mouse */
+    color: white; /* cor do texto ao passar o mouse */
+    transform: scale(1.05); /* Aumentar ligeiramente o tamanho */
 }
-body.dark-mode .sidebar {
-    background-color: #495057;
+
+.custom-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+
+.hidden {
+    display: none;
+}
+
+.h-100vh {
+    height: 100vh;
 }

@@ -1,7 +1,7 @@
 <?php
 class App {
-    protected $controller = "HomeController";
-    protected $method     = "index";
+    protected $controller = "AuthController";
+    protected $method     = "entrar";
     protected $params     = [];
 
     public $currentController;
@@ -10,6 +10,7 @@ class App {
 
     public function __construct(){
         session_start();
+
         $url = $this->parseUrl();
 
         if (isset($url[0])) {
@@ -36,10 +37,18 @@ class App {
 
         $_SESSION["currentController"] = $this->currentController;
 
+        //Se tentar acessar uma página restrita e não estiver logado é redirecionado pra página de login
         if ($this->isRestrictedPage(ucfirst($this->controllerName), $this->method)) {
             if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true) {
                 $http = (empty($_SERVER['HTTPS']) ? 'http' : 'https');
-                $url = "$http://{$_SERVER["HTTP_HOST"]}/ProjetoBasePHP/public/home/entrar";
+                $url = "$http://{$_SERVER["HTTP_HOST"]}/ProjetoBasePHP/public/auth/entrar";
+                header("Location: " . $url);
+                exit;
+            }
+        } else {//Se tentar acessar o login e já estiver logado, vai ser redirecionado pra página inicial
+            if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true) {
+                $http = (empty($_SERVER['HTTPS']) ? 'http' : 'https');
+                $url = "$http://{$_SERVER["HTTP_HOST"]}/ProjetoBasePHP/public/home/home";
                 header("Location: " . $url);
                 exit;
             }
@@ -50,8 +59,7 @@ class App {
 
     protected function isRestrictedPage($controller, $method) {
         $allowedRoutes = [
-            'HomeController' => ['entrar', 'registrar'],
-            'UsuarioController' => ['entrar', 'registrar']
+            'AuthController' => ['entrar', 'registrar', 'signin', 'signup']
         ];
 
         return !isset($allowedRoutes[$controller]) || !in_array($method, $allowedRoutes[$controller]);

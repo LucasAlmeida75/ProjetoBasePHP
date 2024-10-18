@@ -24,8 +24,8 @@
 </form>
 
 <?php if (isset($data["clientes"]) && count($data["clientes"]) > 0) { ?>
-<table class="table table-bordered">
-    <thead class="table-light">
+<table class="table table-bordered table-striped">
+    <thead>
         <tr>
             <th>Ações</th>
             <th>CPF/CNPJ</th>
